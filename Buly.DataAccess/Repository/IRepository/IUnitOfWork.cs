@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BulkyBook.DataAccess.Repository.IRepository {
-	internal class IUnityOfWork {
-		ICategoryRepository CategoryRepository { get; set; }
-		//void Save();
+	public interface IUnitOfWork {
+		ICategoryRepository Category{ get; }
+
+		void Save();
 	}
 }

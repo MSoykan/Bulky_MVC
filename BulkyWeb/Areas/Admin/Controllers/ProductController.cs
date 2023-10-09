@@ -1,7 +1,9 @@
 ﻿using BulkyBook.DataAccess.Data;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models.Models;
+using BulkyBook.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BulkyBookWeb.Areas.Admin.Controllers
 {
@@ -10,23 +12,34 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
     {
 
         private readonly IProductRepository _productRepo;
-        public ProductController(IProductRepository db)
+        private readonly ICategoryRepository _categoryRepo;
+		private readonly IWebHostEnvironment _webHostEnvironment;
+
+		public ProductController(IProductRepository db,
+                                 IWebHostEnvironment webHostEnvironment,
+                                 ICategoryRepository categoryDb
+                                 )
         {
             _productRepo = db;
-        }
+            _webHostEnvironment = webHostEnvironment;
+            _categoryRepo = categoryDb;
+		}
         public IActionResult Index()
         {
             List<Product> objProductList = _productRepo.GetAll().ToList();
+            //IEnumerable<SelectListItem> CategoryList = _categoryRepo.GetAll().ToList();
             return View(objProductList);
         }
 
         public IActionResult Create()
         {
+            //IEnumerable<SelectListItem> CategoryList = new SelectListItem[1]= {
 
+            //}
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Product obj)
+        public IActionResult Create(Product obj, IFormFile? file)
         {
             
             //if (obj.Name != null && obj.Name.ToLower() == "test") {
@@ -35,6 +48,19 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if(file != null) {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                    using(var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create)) {
+                        file.CopyTo(fileStream);
+                    }
+
+                    obj.ImageUrl = @"\images\"+ fileName;
+
+				}
+
                 _productRepo.Add(obj);
                 _productRepo.Save();
                 TempData["success"] = "Product created successfully";
@@ -102,5 +128,16 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         {
             return View();
         }
-    }
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAll() {
+			List<Product> objProductList = _productRepo.GetAll().ToList();
+
+			return Json(new { data = objProductList });
+		}
+
+
+		#endregion
+	}
 }

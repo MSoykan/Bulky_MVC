@@ -10,6 +10,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
     {
 
         private readonly ICategoryRepository _categoryRepo;
+
         public CategoryController(ICategoryRepository db)
         {
             _categoryRepo = db;
