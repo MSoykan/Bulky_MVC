@@ -53,6 +53,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
 
+
+
                     using(var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create)) {
                         file.CopyTo(fileStream);
                     }
@@ -95,21 +97,23 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             }
             return View();
         }
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Product? productFromDb = _productRepo.Get(u => u.Id == id);
-            //Product? productFromDb1 = _productRepo.Categories.FirstOrDefault(x => x.Id == id);
-            //Product? productFromD2b = _productRepo.Categories.Where(x => x.Id == id).FirstOrDefault();
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
-            return View(productFromDb);
-        }
+        //public IActionResult Delete(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    Product? productFromDb = _productRepo.Get(u => u.Id == id);
+        //    //Product? productFromDb1 = _productRepo.Categories.FirstOrDefault(x => x.Id == id);
+        //    //Product? productFromD2b = _productRepo.Categories.Where(x => x.Id == id).FirstOrDefault();
+        //    if (productFromDb == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(productFromDb);
+        //}
+
+
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
@@ -128,13 +132,34 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         {
             return View();
         }
-        #region API CALLS
+		#region API CALLS
 
-        [HttpGet]
-        public IActionResult GetAll() {
+		[HttpGet]
+		public IActionResult GetAll() {
 			List<Product> objProductList = _productRepo.GetAll().ToList();
 
 			return Json(new { data = objProductList });
+		}
+
+        [HttpDelete]
+		public IActionResult Delete(int? id) {
+            var productToBeDeleted = _productRepo.Get(u=> u.Id ==id);
+            if(productToBeDeleted == null) {
+                return Json(new { success = false, message = "Error while deleting" }); 
+            }
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, _productRepo.Get(x => x.Id == id).
+                ImageUrl.TrimStart('\\'));
+
+            if(System.IO.File.Exists(oldImagePath)) {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _productRepo.Remove(productToBeDeleted);
+            _productRepo.Save();
+
+
+			return Json(new {  success = true, message = "Delete Successful" });
 		}
 
 
