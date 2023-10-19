@@ -12,6 +12,10 @@ namespace BulkyBook.DataAccess.Data {
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<Product> Products { get; set; }
 
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
+        public DbSet<Company> Companies { get; set; }
+
 		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -101,6 +105,26 @@ namespace BulkyBook.DataAccess.Data {
 					Price100 = 20,
 					CategoryId = 1,
 					ImageUrl = ""
+				}
+				);
+			modelBuilder.Entity<Company>().HasData(
+				new Company {
+					Id = 1,
+					Name = "Tech Solution",
+					StreetAddress = "123 Tech St",
+					City = "Tech City",
+					PostalCode = "123123",
+					State = "IL",
+					PhoneNumber = "xxxxx"
+				},
+				new Company {
+					Id = 2,
+					Name = "Vivid Books",
+					StreetAddress = "Gayrettepe",
+					City = "İstanbul",
+					PostalCode = "Idk",
+					State = "-",
+					PhoneNumber = " 534 744 8281"
 				}
 				);
 		}

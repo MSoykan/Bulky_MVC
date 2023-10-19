@@ -1,0 +1,93 @@
+﻿@model Company
+
+<div class="card shadow border-0 mt-4">
+	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h2 class="text-white py-2">Create Company</h2>
+			</div>
+		</div>
+	</div>
+	<div class="card-body p-4">
+		<form method="post">
+			<input asp-asp-for="Id" hidden />
+			<div class="border p-3 mt-4">
+				<div class="row pb-2">
+					<h2 class="text-primary">Edit Company</h2>
+					<hr />
+				</div>
+				<div asp-validation-summary="ModelOnly"></div>
+				<div class="form-floating py-2 col-12">
+					<label asp-for="Name" class="ms-2"></label>
+					<input asp-for="Name" class="form-control border-0 shadow">
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</div>
+				<div class="form-floating py-2 col-12">
+					<label asp-for="PhoneNumber" class="ms-2"></label>
+					<input asp-for="PhoneNumber" class="form-control border-0 shadow">
+					<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+				</div>
+				<div class="form-floating py-2 col-12">
+					<label asp-for="StreetAddress" class="ms-2"></label>
+					<input asp-for="StreetAddress" class="form-control border-0 shadow" />
+					<span asp-validation-for="StreetAddress" class="text-danger"></span>
+				</div>
+				<div class="form-floating py-2 col-12">
+					<label asp-for="City" class="ms-2"></label>
+					<input asp-for="City" class="form-control border-0 shadow">
+					<span asp-validation-for="City" class="text-danger"></span>
+				</div>
+				<div class="form-floating py-2 col-12">
+					<label asp-for="State" class="ms-2"></label>
+					<input asp-for="State" class="form-control border-0 shadow" />
+					<span asp-validation-for="State" class="text-danger"></span>
+				</div>
+				<div class="form-floating py-2 col-12">
+					<label asp-for="PhoneNumber" class="ms-2"></label>
+					<input asp-for="PhoneNumber" class="form-control border-0 shadow" />
+					<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+				</div>
+				<div class="form-floating py-2 col-12">
+					<label asp-for="PostalCode" class="ms-2"></label>
+					<input asp-for="PostalCode" class="form-control border-0 shadow" />
+					<span asp-validation-for="PostalCode" class="text-danger"></span>
+				</div>
+
+
+				<div class="row">
+					<div class="col-6 col-md-3">
+						<button type="submit" class="btn btn-primary form-control">Edit</button>
+					</div>
+					<div class="col-6 col-md-3">
+						<a asp-controller="Company" asp-action="Index" class="btn btn-secondary form-control">
+							Back to List
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+@section Scripts{
+	<script>
+		tinymce.init({
+			selector: 'textarea',
+			plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+			toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+			tinycomments_mode: 'embedded',
+			tinycomments_author: 'Author name',
+			mergetags_list: [
+				{ value: 'First.Name', title: 'First Name' },
+				{ value: 'Email', title: 'Email' },
+			],
+			ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant"))
+		});
+	</script>
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+	}
